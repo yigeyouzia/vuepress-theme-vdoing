@@ -26,7 +26,7 @@ jobs:
         uses: actions/setup-node@v3 # 作用：安装nodejs
         with:
           node-version: ${{ matrix.node-version }} # 版本
-      - name: Build-and-deploy # 步骤3
+      - name: Build-and-deploy-github # 步骤3
         run: |
           remote_addr=`git remote get-url --push origin`
           commit_info=`git describe --all --always --long`
@@ -45,4 +45,20 @@ jobs:
           remote_addr=`echo $remote_addr | awk -F'://' '{print $2}'`
           remote_addr=https://${user_name}:${{secrets.A}}@${remote_addr}
           git remote add origin ${remote_addr}
+          git push origin HEAD:$deploy_branch --force # 推送到github $deploy_branch分支
+
+      - name: Build-and-deploy-coding # 步骤4
+        run: |
+          echo -e "第三步结束\n第四步"
+          pwd
+          user_name=`git log -1 --pretty=format:'%an'`
+          user_email=`git log -1 --pretty=format:'%ae'`
+          deploy_branch=gh-pages
+
+          git config --global init.defaultBranch $deploy_branch
+          git config user.name ${user_name}
+          git config user.email ${user_email}
+          remote_addr=https://youcyt:${{secrets.CODING_TOKEN}}@e.coding.net:youcyt/youcyt/vuepress.git
+          echo "remote_addr is ${remote_addr}"
+          git remote setup origin ${remote_addr}
           git push origin HEAD:$deploy_branch --force # 推送到github $deploy_branch分支
