@@ -50,6 +50,7 @@ jobs:
       - name: Build-and-deploy-coding # 步骤4
         run: |
           echo -e "第三步结束\n第四步"
+          cd docs/.vuepress/dist
           pwd
           user_name=`git log -1 --pretty=format:'%an'`
           user_email=`git log -1 --pretty=format:'%ae'`
@@ -62,6 +63,7 @@ jobs:
           echo "url 是 ${remote_addr}"
           git remote set-url origin ${remote_addr}
           commit_info=`git describe --all --always --long`
+          git init
           git add .
           # git commit -m "aa ${commit_info}"
           git remote -v
