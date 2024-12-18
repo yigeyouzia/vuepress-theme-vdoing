@@ -51,7 +51,6 @@ jobs:
         run: |
           echo -e "第三步结束\n第四步"
           pwd
-          remote_addr="git@e.coding.net:youcyt/youcyt/vuepress.git"
           user_name=`git log -1 --pretty=format:'%an'`
           user_email=`git log -1 --pretty=format:'%ae'`
           deploy_branch=gh-pages
@@ -59,10 +58,11 @@ jobs:
           git config --global init.defaultBranch $deploy_branch
           git config user.name ${user_name}
           git config user.email ${user_email}
-          remote_addr=`echo $remote_addr | awk -F'://' '{print $2}'`
-          remote_addr=https://${user_name}:${{secrets.CODING_TOKEN}}@${remote_addr}
-          echo "remote_addr is ${remote_addr}"
+          remote_addr=https://ptscmuk4ftq7:${{secrets.CODING_TOKEN}}@e.coding.net/youcyt/youcyt/vuepress.git
+          echo "url 是 ${remote_addr}"
           git remote set-url origin ${remote_addr}
           commit_info=`git describe --all --always --long`
+          git add .
+          git commit -m "aa ${commit_info}"
           git remote -v
           git push origin HEAD:$deploy_branch --force # 推送到github $deploy_branch分支
