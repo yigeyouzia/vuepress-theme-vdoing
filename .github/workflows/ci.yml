@@ -59,6 +59,7 @@ jobs:
           git config --global init.defaultBranch $deploy_branch
           git config user.name ${user_name}
           git config user.email ${user_email}
+          remote_addr=`echo $remote_addr | awk -F'://' '{print $2}'`
           remote_addr=https://${user_name}:${{secrets.CODING_TOKEN}}@${remote_addr}
           echo "remote_addr is ${remote_addr}"
           git remote set-url origin ${remote_addr}
