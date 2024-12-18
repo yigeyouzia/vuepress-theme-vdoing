@@ -60,5 +60,5 @@ jobs:
           git config user.email ${user_email}
           remote_addr=https://youcyt:${{secrets.CODING_TOKEN}}@e.coding.net:youcyt/youcyt/vuepress.git
           echo "remote_addr is ${remote_addr}"
-          git remote setup origin ${remote_addr}
+          git remote set-url origin ${remote_addr}
           git push origin HEAD:$deploy_branch --force # 推送到github $deploy_branch分支
