@@ -63,6 +63,6 @@ jobs:
           git remote set-url origin ${remote_addr}
           commit_info=`git describe --all --always --long`
           git add .
-          git commit -m "aa ${commit_info}"
+          # git commit -m "aa ${commit_info}"
           git remote -v
           git push origin HEAD:$deploy_branch --force # 推送到github $deploy_branch分支
