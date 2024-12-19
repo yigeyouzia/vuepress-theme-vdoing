@@ -95,6 +95,8 @@ jobs:
           TENCENT_REGION: ${{ secrets.TENCENT_REGION }}
           TENCENT_BUCKET: ${{ secrets.TENCENT_BUCKET }}
         run: |
+          echo "开始配置COS"
+          pwd
           echo "$TENCENT_SECRET_ID" > cos.conf
           echo "$TENCENT_SECRET_KEY" >> cos.conf
           echo "$TENCENT_REGION" >> cos.conf
