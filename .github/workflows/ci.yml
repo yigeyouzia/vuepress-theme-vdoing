@@ -63,8 +63,45 @@ jobs:
           echo "url 是 ${remote_addr}"
           git remote set-url origin ${remote_addr}
           commit_info=`git describe --all --always --long`
+          echo "b.youcyt.ltd" > CNAME
           git init
           git add .
-          # git commit -m "aa ${commit_info}"
+          git commit -m "aa ${commit_info}"
           git remote -v
           git push origin HEAD:$deploy_branch --force # 推送到github $deploy_branch分支
+
+  upload:
+    needs: build # 依赖于build步骤
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: "3.x"
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install cos-python-sdk-v5 # 安装腾讯云COS SDK
+
+      - name: Configure Tencent COS
+        env:
+          TENCENT_SECRET_ID: ${{ secrets.TENCENT_SECRET_ID }}
+          TENCENT_SECRET_KEY: ${{ secrets.TENCENT_SECRET_KEY }}
+          TENCENT_REGION: ${{ secrets.TENCENT_REGION }}
+          TENCENT_BUCKET: ${{ secrets.TENCENT_BUCKET }}
+        run: |
+          echo "$TENCENT_SECRET_ID" > cos.conf
+          echo "$TENCENT_SECRET_KEY" >> cos.conf
+          echo "$TENCENT_REGION" >> cos.conf
+          echo "$TENCENT_BUCKET" >> cos.conf
+          echo "COS配置完成"
+          cat cos.conf
+
+      - name: Upload files to Tencent COS
+        run: |
+          python upload_to_cos.py # 假设您的上传脚本名为upload_to_cos.py
